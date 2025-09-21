@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube Playlist Duration</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    input, button { padding: 10px; margin: 5px; font-size: 16px; }
+    #result { margin-top: 20px; font-size: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>🎵 YouTube Playlist Duration Calculator</h1>
+  <input type="text" id="playlistUrl" placeholder="Paste YouTube Playlist URL" size="50">
+  <button onclick="calculate()">Calculate</button>
+  <div id="result"></div>
+
+  <script>
+    async function calculate() {
+      const url = document.getElementById("playlistUrl").value;
+      document.getElementById("result").textContent = "Calculating...";
+      
+      const response = await fetch("/get_duration", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url })
+      });
+      
+      const data = await response.json();
+      if (data.duration) {
+        document.getElementById("result").textContent = "Total Duration: " + data.duration;
+      } else {
+        document.getElementById("result").textContent = "Error: " + (data.error || "Something went wrong");
+      }
+    }
+  </script>
+</body>
+</html>
